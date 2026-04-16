@@ -3,5 +3,8 @@ db/finally.db
 .DS_Store
 node_modules/
 .next/
+out/
 dist/
 __pycache__/
+.venv/
+.pytest_cache/
