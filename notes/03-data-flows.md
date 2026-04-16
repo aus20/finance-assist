@@ -1,6 +1,6 @@
 # Data Flows
 
-These are the intended high-level flows for the system. They describe the target architecture, not completed features.
+These are the current high-level flows for the system. They describe what is implemented in this checkpoint.
 
 ## Health Flow
 
@@ -10,9 +10,11 @@ These are the intended high-level flows for the system. They describe the target
 
 ## Market Data Flow
 
-1. A market-data provider or simulator produces price updates.
-2. The backend stores the latest values in an internal cache or service layer.
-3. The frontend will later subscribe to updates through an API stream.
+1. The backend seeds `backend/app/market_data/` with a fixed ticker set during startup.
+2. The market-data service keeps the latest prices in an in-memory cache and advances them with background ticks.
+3. `GET /api/stream/prices` returns an SSE response from `backend/app/routes/stream.py`.
+4. When a client connects, the route emits the current seeded snapshot immediately from the cache.
+5. The route then keeps the connection open and streams later tick updates from the market-data service through subscriber queues.
 
 ## Trade Flow
 
@@ -25,4 +27,3 @@ These are the intended high-level flows for the system. They describe the target
 1. The user will later send a prompt to the assistant.
 2. The backend will pass context to the LLM layer.
 3. The assistant may return analysis and, when supported, structured actions for the backend to validate and apply.
-
